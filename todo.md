@@ -42,6 +42,13 @@ hover:scale-110 ease-out duration-300
 
 # hosting
 <!-- netlify -->
+* sign up and create account
+* go to sites on navbar
+* drag and drop the build folder created by npm run build on the project folder
+
+* cmd :
+<!-- npm run build -->
+
 
 # imp points to remember
 * put all the content inside one div in return of app.js

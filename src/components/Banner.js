@@ -3,7 +3,6 @@ import axios from 'axios'
 import { useEffect, useState } from 'react'
 
 function Banner() {
-
   const [movie,setMovie] = useState([])
   useEffect(function(){
     // api (getting data of api using axios)

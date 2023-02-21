@@ -4,7 +4,6 @@ import { Oval } from 'react-loader-spinner'
 import Pagination from './Pagination'
 
 function TrendingMovies() {
-
     const [movies,setMovies] = useState([])
     const [fav,setFav] = useState([])
     const [page,setPage]= useState(1)
@@ -23,7 +22,13 @@ function TrendingMovies() {
         // api (getting data of api using axios)
         axios.get(`https://api.themoviedb.org/3/trending/movie/week?api_key=469acef9f4326bdc9094e38f470f1935&page=${page}`).then((res)=>
         {console.table(res.data.results)
-        setMovies(res.data.results);}
+        setMovies(res.data.results);
+
+        // get data from load storage
+        let oldFav = localStorage.getItem("imdb");
+        oldFav = JSON.parse(oldFav)
+        setFav([...oldFav])
+        }
     )
     },[page])
 
@@ -31,6 +36,15 @@ function TrendingMovies() {
         let newArray = [...fav,movies]
         setFav([...newArray])
         console.log(newArray)
+
+        // local storage save code
+        localStorage.setItem("imdb",JSON.stringify(newArray))
+    }
+
+    let del = (movies) => {
+        let newArray = fav.filter((m)=>m.id!==movies.id)
+        setFav([...newArray])
+        localStorage.setItem("imdb",JSON.stringify(newArray))
     }
   return (
     <>
@@ -53,7 +67,7 @@ function TrendingMovies() {
                 {
                     movies.map((movies)=>(
 
-                        <div className="max-w-sm rounded overflow-hidden shadow-lg hover:scale-110 ease-out duration-300">
+                        <div className="max-w-sm rounded overflow-hidden shadow-lg hover:scale-110 ease-out duration-300 m-8">
                             <div className={` m-4 bg-[url(https://image.tmdb.org/t/p/w500/${movies.backdrop_path})] h-[35vh]  bg-center bg-cover`}
                                     onMouseEnter={() => {
                                         setHover(movies.id)
@@ -65,7 +79,7 @@ function TrendingMovies() {
                                 {
                                 hover === movies.id && <> {!fav.find((m) => m.id === movies.id) ?
                                         <div className='absolute top-2 right-2 p-2 bg-gray-800 rounded-xl text-xl cursor-pointer' onClick={() => add(movies)}>😍</div> : 
-                                        <div className='absolute top-2 right-2 p-2 bg-gray-800 rounded-xl text-xl cursor-pointer' onClick={() => add(movies)}>📍</div>
+                                        <div className='absolute top-2 right-2 p-2 bg-gray-800 rounded-xl text-xl cursor-pointer' onClick={() => del(movies)}>📍</div>
                                 } </>
                                 }
 
@@ -86,11 +100,9 @@ function TrendingMovies() {
                 }
             </div>
         }
-        </div>
-        
+        </div>       
         <Pagination pageProp={page} goAhead={goAhead} goBack={goBack}/>       
     </>
   )
 }
-
 export default TrendingMovies
